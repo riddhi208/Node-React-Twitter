@@ -1,0 +1,65 @@
+extends ./layouts/main.pug
+block content
+  include navbar.pug
+
+  .container
+    .site
+      .row
+        .col.s3
+          h5(align='center').orange-text#text-darken-2 Your Profile
+          .card-panel.grey.lighten-4
+            a(href='/profile')
+              each user in username
+                .form-group(align='center')
+                  img.img-thumbnails(src='./images/profile/'+ user.image, style = "width: 200px; height:200px;")
+                  br
+                  h4.indigo-text#text-darken-2=user.fullname
+
+        .col.s9
+          h5(align='center').orange-text.text-darken-2 Who to Follow???
+          each name in follow
+            .col.s4
+              .card-panel.grey.lighten-4
+                .form-group(align='center')
+                  form(method='post', action='/follow')
+                    .form-group(align='center')
+                      .col.s2
+                        img.img-circle(src='./images/profile/'+ name.image,width ="80px" height="80px")
+                      .col.s1
+                      h5.indigo-text#text-darken-2= name.fullname
+                        input(type='hidden', name='myfollow', value = name.id)
+                      button.waves-effect.waves-light.indigo.btn(type='submit', style="margin-left:110px;margin-top:-40px;") Follow
+                      br
+                      br
+
+
+
+    .carousel
+      each name in follow
+        a.carousel-item(href='#one!')
+          img(src='./images/profile/'+ name.image,width ="200px" height="200px")
+
+        //- a.carousel-item(href='#two!')
+        //-   img(src='./images/profile/'+ name.image,width ="80px" height="80px")
+
+        //- a.carousel-item(href='#three!')
+        //-   img(src='./images/profile/'+ name.image,width ="80px" height="80px")
+
+        //- a.carousel-item(href='#four!')
+        //-   img(src='./images/profile/'+ name.image,width ="80px" height="80px")
+
+        //- a.carousel-item(href='#five!')
+        //-   img(src='./images/profile/'+ name.image,width ="80px" height="80px")
+
+
+
+  footer.page-footer.indigo
+    .footer-copyright
+      .container(align='center')
+        | &copy; 2017 Developed By Vivek & Riddhi
+
+  script.
+    $(document).ready(function(){
+      $('.carousel').carousel();
+    });
+

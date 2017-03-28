@@ -1,0 +1,28 @@
+version: '2'
+services:
+  db:
+    image: postgres:9-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: riddhigohel
+      POSTGRES_USER: riddhi
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    environment:
+      PORT: 8000
+      PGDB_TCP_PORT: 5432
+      PGDB_TCP_HOST: db
+      PGDB_USER: riddhi
+      PGDB_PASS: riddhigohel
+      PGDB_DB: twitter
+    ports:
+      - "8000:8000"
+
+    links:
+      - db
+

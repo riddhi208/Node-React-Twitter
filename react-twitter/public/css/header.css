@@ -1,0 +1,19 @@
+#tweetbtn{
+  float: center;
+}
+.tweetName{
+  font-size: 25px;
+}
+.tweetText{
+  font-size: 20px;
+
+}
+.site{
+  display: flex;
+}
+.site-content{
+  flex: 1;
+}
+footer.page-footer {
+  padding-top: 0px;
+}

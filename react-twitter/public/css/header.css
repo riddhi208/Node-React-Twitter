@@ -17,3 +17,22 @@
 footer.page-footer {
   padding-top: 0px;
 }
+.collection a.collection-item {
+    display: block;
+    transition: .25s;
+    color: indigo;
+}
+.pagination li a {
+    color:indigo;
+}
+@media screen and (max-width: 500px){
+  body {
+    color:red;
+  }
+  form.loginform{
+
+    margin-left: 10%;
+    width: 100%;
+    height: 20%;
+  }
+}

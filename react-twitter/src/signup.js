@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../public/css/signup.css';
 import {  } from 'react-router';
-import { Button, Row, Input } from 'react-materialize';
+import { Button, Row, Input, Footer, NavItem, Navbar } from 'react-materialize';
 import axios from 'axios';
 // let request = axios.create({
 //   withCredentials: true,
@@ -47,17 +47,23 @@ class signup extends Component {
     console.log(this.state);
     return (
 
-      <div className="container signupform">
-        <div className="wrapper">
-        <form onSubmit={this.handleSubmit}>
+      <div className="site">
+        <Navbar brand='Twitter' right className="indigo">
+          <NavItem href='login'>Login</NavItem>
+          <NavItem href='signup'>SignUp</NavItem>
+        </Navbar>
+        <div className="wrapper site-content">
+        <form onSubmit={this.handleSubmit} className="signupform">
           <h4 className="indigo-text text-darken-2">Create New One!!!</h4>
           <br/>
           <Row>
             <Input
-              s={6}
+              s={12}
               type="text"
               name="fullname"
               label="name"
+              error="name is required"
+              validate='true'
               onChange={this.handleInputChange}
               minLength="3"
               required
@@ -65,20 +71,24 @@ class signup extends Component {
           </Row>
           <Row>
           <Input
-            s={6}
+            s={12}
             type="email"
             name="emailid"
             label="Email Id"
+            error="name is required"
+            validate='true'
             onChange={this.handleInputChange}
             required
           />
           </Row>
           <Row>
           <Input
-            s={6}
+            s={12}
             type="password"
             label="Password"
             name="password"
+            error="name is required"
+            validate='true'
             onChange={this.handleInputChange}
             minLength="1"
             required
@@ -86,7 +96,7 @@ class signup extends Component {
           </Row>
           <Row>
           <Input
-            s={6}
+            s={12}
             type="file"
             name="file"
             onChange={this.handleInputChange}
@@ -101,6 +111,8 @@ class signup extends Component {
           <br/>
         </form>
       </div>
+      <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
+        </Footer>
     </div>
     );
   }

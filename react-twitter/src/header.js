@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, NavItem, Icon, Collection, CollectionItem, Badge, Modal,Footer, Button, Input, Col, Row, CardPanel, Card, CardTitle } from 'react-materialize';
+import { Navbar, NavItem, Icon, Collection, CollectionItem, Pagination, Badge, Modal,Footer, Button, Input, Col, Row, CardPanel, Card, CardTitle } from 'react-materialize';
 import { browserHistory } from 'react-router';
 import cookie from 'react-cookie';
 import axios from 'axios';
@@ -11,29 +11,32 @@ class header extends Component {
     super(props);
     this.state={
       data:'',
-
     };
     this.onTweet = this.onTweet.bind(this);
     this.handleFollow = this.handleFollow.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.onChangePage = this.onChangePage.bind(this);
   }
-  componentWillMount() {
 
+  handleMount(){
     let userId = this.props.params.id;
-    console.log(userId)
-    if(cookie.load(userId)){
+    console.log(userId);
+    if(cookie.load(this.props.params.id)) {
       axios.get('http://localhost:8000/header/' + userId)
       .then(res => {
-
         const data= res.data;
         this.setState({
           data: data,
         });
-        console.log("-------", res.data);
       });
+    } else {
+      browserHistory.push('/login');
     }
-    console.log("1!!!!!1", userId);
+  }
+
+  componentWillMount() {
+    this.handleMount();
   }
 
   handleInputChange(event) {
@@ -63,6 +66,7 @@ class header extends Component {
   }
 
   handleFollow(id) {
+    let self=this;
 
     let userid = this.props.params.id;
     console.log("follower-------",userid);
@@ -81,7 +85,8 @@ class header extends Component {
       }
     })
     .then(function(response) {
-      location.reload();
+      self.handleMount();
+
     })
     .catch(function (error) {
       console.log(error);
@@ -89,20 +94,26 @@ class header extends Component {
     event.preventDefault(event);
   }
 
-  onTweet(event) {
+  onTweet() {
+    let self=this;
     let userid = this.props.params.id;
     axios.post('http://localhost:8000/tweet',
       {data: this.state,})
 
     .then(function (response) {
-      location.reload();
+      self.handleMount();
+      self.setState({data:''});
       console.log(response);
     })
     .catch(function (error) {
       console.log(error);
     });
-    event.preventDefault(event);
+    // event.preventDefault(event);
 
+  }
+
+  onChangePage(event) {
+    alert("page changed...");
   }
 
   render() {
@@ -128,7 +139,7 @@ class header extends Component {
                   className=""/>
                 </Col>
                 <Col s={3}>
-                <a className="tweetName"> {this.state.data.tweets[i].fullname}</a>
+                <p className="tweetName"> {this.state.data.tweets[i].fullname}</p>
                 </Col>
               </Row>
                 <div className="tweetText"> {this.state.data.tweets[i].t_tweetText} </div>
@@ -149,12 +160,14 @@ class header extends Component {
                   className=""/>
                 </Col>
                 <Col s={3}>
-                <a href="/profile" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
+                <a href="#" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
                 </Col>
               </Row>
               <div className="tweetText"> {this.state.data.tweets[i].t_tweetText}
               </div>
-
+              <br />
+              <div className="time indigo-text">{this.state.data.tweets[i].t_time}</div>
+              <br/>
             </CardPanel>
             </div>
           );
@@ -187,7 +200,10 @@ class header extends Component {
                         name="myfollow"
                         value={a}/>
                       <Button
-                        onClick={this.handleFollow.bind(this, a)}
+                        onClick={ (event) => {
+                          this.handlefollow(a);
+                          event.preventDefault();
+                        }}
                         type="submit"
                         value="Follow"
                         id={a}
@@ -206,7 +222,7 @@ class header extends Component {
       if(this.state.data.username) {
         name.push(
         <div key={i}>
-          <a href="profile" className="tweetName"> {this.state.data.username[0].fullname}</a>
+          <p className="tweetName"> {this.state.data.username[0].fullname}</p>
         </div>
       );
      }
@@ -216,12 +232,12 @@ class header extends Component {
     const profileroute = `/profile/${ this.props.params.id }`;
     const morefriendsroute = `/morefriends/${ this.props.params.id }`;
 
-    return (
-      <div className="site">
-        <Navbar brand='Twitter' right className="indigo">
-          <NavItem href={homeroute}>
-            <Icon>home</Icon>
-          </NavItem>
+      return (
+        <div className="site">
+          <Navbar brand='Twitter' right className="indigo">
+            <NavItem href={homeroute}>
+              <Icon>home</Icon>
+            </NavItem>
             <Modal
               header=''
               trigger={
@@ -230,87 +246,90 @@ class header extends Component {
                 </NavItem>
               }>
               <form
-                onSubmit={this.onTweet}>
-              <Input
-                name="tweet"
-                placeholder="Whats going on???"
-                maxLength="140"
-                onChange={this.handleInputChange}
-                required="required"/>
+                onSubmit={ (event) => {
+                   this.onTweet();
+                   event.preventDefault();
+                 }}>
+                <Input
+                  name="tweet"
+                  placeholder="Whats going on???"
+                  maxLength="140"
+                  onChange={this.handleInputChange}
+                  required="required"/>
 
-              <Input
-                name="imageTweet"
-                type="file"
-                onChange={this.handleInputChange}
-              />
-                <Button
-                  type="submit"
-                  className="indigo"
-                  id="tweetbtn">Tweet
-                </Button>
+                <Input
+                  name="imageTweet"
+                  type="file"
+                  onChange={this.handleInputChange}
+                />
+                  <Button
+                    type="submit"
+                    className="indigo"
+
+                    id="tweetbtn">Tweet
+                  </Button>
               </form>
             </Modal>
-          <NavItem href={profileroute}>
-              <Icon>face</Icon>
-          </NavItem>
-          <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
-        </Navbar>
+            <NavItem href={profileroute}>
+                <Icon>face</Icon>
+            </NavItem>
+            <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
+          </Navbar>
 
-        <div className="container site-content">
-          <Row key={i}>
-            <Col s={3} key={i}>
-            <br/>
-            <h5 className="indigo-text"><Icon>perm_identity</Icon>My Profile</h5>
-              <Card className='small' key={i}
-                header={
-                  <CardTitle key={i}
-                    image={require(`../public/images/f99903e47077c0d6d40e5eee4c39151c`)}>
-                  </CardTitle>
-                }
-                actions={
-                  [
-                    <div key={i}>
-                      <p>{name}</p>
-                    </div>
-                  ]
-                }>
-              </Card>
+          <div className="container site-content">
+            <Row key={i}>
+              <Col s={3} key={i}>
               <br/>
-              <Collection>
-                <CollectionItem href="#!">
-                  Tweets <Badge newIcon className="indigo">{this.state.data.count1}</Badge>
-                </CollectionItem>
-                <CollectionItem href="#!">
-                  Followers <Badge newIcon className="indigo">{this.state.data.count}</Badge>
-                </CollectionItem>
-                <CollectionItem href="#!">
-                  Likes <Badge newIcon className="indigo">4</Badge>
-                </CollectionItem>
+              <h5 className="indigo-text"><Icon>perm_identity</Icon>My Profile</h5>
+                <Card className='small'
+                  header={
+                    <CardTitle key={i}
+                      image={require(`../public/images/f99903e47077c0d6d40e5eee4c39151c`)}>
+                    </CardTitle>
+                  }
+                  actions={[<a href='#'>{name}</a>]}>
+                </Card>
+                <br/>
+                <Collection>
+                  <CollectionItem href="#!">
+                    Tweets <Badge newIcon className="indigo">{this.state.data.count1}</Badge>
+                  </CollectionItem>
+                  <CollectionItem href="#!">
+                    Followers <Badge newIcon className="indigo">{this.state.data.count}</Badge>
+                  </CollectionItem>
+                  <CollectionItem href="#!">
+                    Likes <Badge newIcon className="indigo">4</Badge>
+                  </CollectionItem>
 
-              </Collection>
-            </Col>
+                </Collection>
+              </Col>
 
-            <Col s={12} m={6}>
-            <br/>
-            <h5 className="indigo-text"><Icon>mode_edit</Icon>Tweets</h5>
-              {tweet}
-            </Col>
+              <Col s={12} m={6}>
+              <br/>
+              <h5 className="indigo-text"><Icon>mode_edit</Icon>Tweets</h5>
+                {tweet}
+              </Col>
 
-            <Col s={12} m={3}>
-            <br/>
-            <h5 className="indigo-text"><Icon>person_pin</Icon>Who to Follow</h5>
+              <Col s={12} m={3}>
+              <br/>
+              <h5 className="indigo-text"><Icon>person_pin</Icon>Who to Follow</h5>
+                {follower}
+                <form action={morefriendsroute}>
+                  <Button className="blue">More Friends</Button>
+                </form>
+              </Col>
+            </Row>
 
-              {follower}
-              <form action={morefriendsroute}>
-                <Button className="blue">More Friends</Button>
-              </form>
-            </Col>
-          </Row>
+            <Pagination items={10} activePage={1} maxButtons={8} className="" onSelect={this.onChangePage}/>
+          </div>
+
+          <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
+          </Footer>
         </div>
-        <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
-        </Footer>
-      </div>
-    );
+      );
+    // } else {
+    //   return (<p> Not found</p>);
+    // }
   }
 }
 

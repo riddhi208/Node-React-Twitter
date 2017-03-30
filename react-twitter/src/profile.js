@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, NavItem, Icon, Modal, Button, Input, Col, Row, CardPanel, Footer, CardTitle, Card } from 'react-materialize';
 import { browserHistory } from 'react-router';
 import axios from 'axios';
+import cookie from 'react-cookie';
 import '../public/css/App.css';
 import '../public/css/header.css';
 
@@ -16,29 +17,38 @@ class profile extends Component {
     };
     this.handleUnfollow = this.handleUnfollow.bind(this);
     this.onTweet = this.onTweet.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
-
-  componentWillMount() {
-    let userId = this.props.params.id;
-    console.log("1!!!!!1", userId);
-    axios.get('http://localhost:8000/profile/' + userId)
-    .then(res => {
-      console.log("profilllll")
-      const data= res.data;
-      this.setState({
-        data: data
+  handleMount(){
+    if(cookie.load(this.props.params.id)) {
+      let userId = this.props.params.id;
+      console.log("1!!!!!1", userId);
+      axios.get('http://localhost:8000/profile/' + userId)
+      .then(res => {
+        console.log("profilllll")
+        const data= res.data;
+        this.setState({
+          data: data
+        });
       });
-    });
-
+    } else {
+      browserHistory.push('/login');
+    }
+  }
+  componentWillMount() {
+    this.handleMount();
   }
 
   onTweet(event) {
+    let self=this;
     let userid = this.props.params.id;
-    axios.post('http://localhost:8000/header/'+userid,
+    axios.post('http://localhost:8000/tweet',
       {data: this.state,})
 
     .then(function (response) {
-      location.reload();
+      self.handleMount();
+      self.setStete({data:''});
       console.log(response);
     })
     .catch(function (error) {
@@ -48,7 +58,15 @@ class profile extends Component {
 
   }
 
+  handleInputChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+    console.log("state---->", this.state);
+  }
+
   handleUnfollow(id) {
+    let self=this;
     let userid = this.props.params.id;
     axios.post('http://localhost:8000/unfollow',
       {
@@ -65,11 +83,34 @@ class profile extends Component {
       }
       console.log(response);
     })
+    .then(function(response) {
+      self.handleMount();
+    })
     .catch(function (error) {
       console.log(error);
     });
     event.preventDefault(event);
   }
+
+  handleLogout(event) {
+    alert('A logout was submitted: '+this.state.fullname +'\n');
+    let userid = this.props.params.id;
+    axios.get('http://localhost:8000/logout',
+      {
+        user: this.state,
+      })
+
+    .then(function (response) {
+      cookie.remove('id', { path: '/' });
+      browserHistory.push('/login');
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    event.preventDefault(event);
+  }
+
 
   render() {
 
@@ -97,7 +138,7 @@ class profile extends Component {
                   className=""/>
                 </Col>
                 <Col s={3}>
-                <a href="/profile/" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
+                <a href="#" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
                 </Col>
               </Row>
                 <div className="tweetText"> {this.state.data.tweets[i].t_tweetText} </div>
@@ -119,7 +160,7 @@ class profile extends Component {
                   className=""/>
                 </Col>
                 <Col s={3}>
-                <a href="/profile" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
+                <a href="#" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
                 </Col>
               </Row>
               <div className="tweetText"> {this.state.data.tweets[i].t_tweetText}
@@ -151,18 +192,20 @@ class profile extends Component {
                 </Col>
                 <Col s={3}>
                   <h5>{this.state.data.follow[i].fullname}</h5>
-
-                      <Input
-                        type="hidden"
-                        name="myfollow"
-                        value={a}/>
-                      <Button
-                        onClick={this.handleUnfollow.bind(this, a)}
-                        type="submit"
-                        value="Unfollow"
-                        id={a}
-                        className="btn-sm btn-info waves-effect waves-light">Unfollow</Button>
-
+                  <Input
+                    type="hidden"
+                    name="myfollow"
+                    value={a}/>
+                  <Button
+                    onClick={ (event) => {
+                      this.handleUnfollow(a);
+                      event.preventDefault();
+                    }}
+                    type="submit"
+                    value="Unfollow"
+                    id={a}
+                    className="btn-sm btn-info waves-effect waves-light">Unfollow
+                  </Button>
                 </Col>
               </Row>
             </CardPanel>
@@ -176,7 +219,7 @@ class profile extends Component {
     if(this.state.data.count) {
       name.push(
       <div key={i}>
-        <a href="profile" className="tweetName"> {this.state.data.username[0].fullname}</a>
+        <a href="#" className="tweetName"> {this.state.data.username[0].fullname}</a>
       </div>
     );
    }
@@ -190,28 +233,38 @@ class profile extends Component {
           <NavItem href={homeroute}>
             <Icon>home</Icon>
           </NavItem>
-            <Modal
-              header=''
-              trigger={
-                <NavItem>
-                  <Icon>mode_edit</Icon>
-                </NavItem>
-              }>
+          <Modal
+            header=''
+            trigger={
+              <NavItem>
+                <Icon>mode_edit</Icon>
+              </NavItem>
+            }>
+            <form
+              onSubmit={ (event) => {
+                 this.onTweet(event);
+                 event.preventDefault();
+               }}>
               <Input
                 name="tweet"
                 placeholder="Whats going on???"
                 maxLength="140"
+                onChange={this.handleInputChange}
                 required="required"/>
-              <form
-                onSubmit={this.onTweet}
-                encType="multipart/form-data">
+
+              <Input
+                name="imageTweet"
+                type="file"
+                onChange={this.handleInputChange}
+              />
                 <Button
                   type="submit"
                   className="indigo"
+
                   id="tweetbtn">Tweet
                 </Button>
-              </form>
-            </Modal>
+            </form>
+          </Modal>
           <NavItem href={profileroute}>
               <Icon>face</Icon>
           </NavItem>
@@ -234,9 +287,10 @@ class profile extends Component {
                 actions={
                   [
                     <div>
-                      <p>{name}</p>
+                      <a href="#">{name}</a>
                       <a href={updateprofileroute}>
-                        <Icon>mode_edit</Icon></a>
+                        <Icon>mode_edit</Icon>
+                      </a>
                     </div>
                   ]
                 }>

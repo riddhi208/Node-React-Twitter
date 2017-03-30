@@ -1,5 +1,6 @@
-@import url(http://fonts.googleapis.com/css?family=Sniglet|Raleway:900);
-
+html, body{
+font-family: 'Roboto', Arial, sans-serif;
+}
 /*style for searchbar */
 .input-group{
   vertical-align: center;
@@ -62,7 +63,7 @@ a:hover#like {
 
 body {
   background: white !important;
-  font-family: GillSans;
+  font-family: Verdana;
 }
 
 .site-footer {
@@ -76,26 +77,6 @@ i{
 .wrapper {
   margin-top: 80px;
   margin-bottom: 180px;
-}
-
-.form-login {
-  max-width: 380px;
-  padding: 15px 35px 45px;
-  margin: 0 auto;
-  background-color: #fff;
-  border: 1px solid rgba(0,0,0,0.1);
-}
-
-.form-control {
-  position: static;
-  font-size: 16px;
-  height: auto;
-  padding: 30px;
-  box-sizing:(border-box);
-
-  &:focus {
-    z-index: 2;
-  }
 }
 
 .form-signup {

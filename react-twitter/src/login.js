@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import '../public/css/login.css';
 import { browserHistory } from 'react-router';
-import { Button, Row, Input } from 'react-materialize';
+import { Button, Row, Input, Navbar, NavItem, Footer } from 'react-materialize';
 import axios from 'axios';
 import cookie from 'react-cookie';
 
-// let request = axios.create({
-//   withCredentials: true,
-//   baseURL: 'http://localhost:8000/'
-// });
 
 class login extends Component {
 
@@ -31,9 +27,8 @@ class login extends Component {
     })
   .then(function (response) {
     console.log("cccccc",response.data.id)
-    cookie.save(response.data.id, 'userid:'+ response.data.id, { path: '/header' })
+    cookie.save(response.data.id, 'userid:'+ response.data.id, { path: '/' })
     if (response.data.id) {
-
       browserHistory.push("/header/" + response.data.id)
     } else {
       browserHistory.push("/login")
@@ -60,14 +55,19 @@ class login extends Component {
 
 
   render() {
+    console.log("------------->>>>>",this.state);
     return (
-      <div className="container loginform">
-        <div className="wrapper">
-        <form onSubmit={this.handleSubmit}>
+      <div className="site">
+        <Navbar brand='Twitter' right className="indigo">
+          <NavItem href='login'>Login</NavItem>
+          <NavItem href='signup'>SignUp</NavItem>
+        </Navbar>
+        <div className="wrapper site-content">
+        <form onSubmit={this.handleSubmit} className="loginform">
           <h3 className="indigo-text text-darken-2">Please Login</h3><br/><br/>
             <Row>
               <Input
-                s={6}
+                s={12}
                 label="Email Id"
                 className="validate"
                 type="email"
@@ -79,7 +79,7 @@ class login extends Component {
             </Row>
             <Row>
               <Input
-                s={6}
+                s={12}
                 label="Password"
                 className="validate"
                 type="password"
@@ -98,6 +98,8 @@ class login extends Component {
             <br/>
           </form>
         </div>
+        <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
+        </Footer>
       </div>
 
     );

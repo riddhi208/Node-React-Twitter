@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../public/css/App.css';
 import '../public/css/header.css';
-import { Navbar, NavItem, Icon, Modal, Button, Input, Col, Row } from 'react-materialize';
+import { Navbar, NavItem, Icon, Modal, Button, Input, Col, Row, Footer } from 'react-materialize';
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 
@@ -70,7 +70,7 @@ class updateprofile extends Component {
     const profileroute = `/profile/${ this.props.params.id }`;
     const homeroute = `/header/${ this.props.params.id }`;
     return (
-      <div>
+      <div className="site">
         <Navbar brand='Twitter' right className="indigo">
           <NavItem href={homeroute}>
             <Icon>home</Icon>
@@ -89,8 +89,7 @@ class updateprofile extends Component {
                 required="required"/>
               <form
                 onSubmit={this.onTweet}
-                encType="multipart/form-data"
-                method="POST" action="/tweet">
+                encType="multipart/form-data">
                 <Button
                   type="submit"
                   className="indigo"
@@ -103,14 +102,14 @@ class updateprofile extends Component {
           </NavItem>
           <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
         </Navbar>
-        <div className="container signupform">
+        <div className="container signupform site-content">
         <form onSubmit={this.handleSubmit}>
           <br />
           <h4 className="indigo-text text-darken-2">Update Profile</h4>
           <br/>
           <Row>
             <Input
-              s={6}
+              s={12}
               type="text"
               name="fullname"
               label="name"
@@ -121,7 +120,7 @@ class updateprofile extends Component {
           </Row>
           <Row>
           <Input
-            s={6}
+            s={12}
             type="email"
             name="emailid"
             label="Email Id"
@@ -131,7 +130,7 @@ class updateprofile extends Component {
           </Row>
           <Row>
           <Input
-            s={6}
+            s={12}
             type="password"
             label="Password"
             name="password"
@@ -167,6 +166,8 @@ class updateprofile extends Component {
         </Button>
         </form>
       </div>
+      <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
+      </Footer>
     </div>
 
     );

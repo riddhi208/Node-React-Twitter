@@ -56,7 +56,7 @@ class morefriends extends Component {
                       />
                     </Col>
 
-                    <Col s={3}>
+                    <Col s={2}>
                       <h5>{this.state.data.follow[i].fullname}</h5>
                       <form method="post" action="/follow">
                         <Input

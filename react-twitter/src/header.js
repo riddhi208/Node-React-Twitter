@@ -66,8 +66,7 @@ class header extends Component {
   }
 
   handleFollow(id) {
-    let self=this;
-
+    let self = this;
     let userid = this.props.params.id;
     console.log("follower-------",userid);
 
@@ -179,7 +178,7 @@ class header extends Component {
          for ( i = 0; i < this.state.data.follow.length ; i++) {
           if(this.state.data.follow) {
             let a = this.state.data.follow[i].id;
-            console.log("///",this.state.data.follow[i].userid);
+            console.log("///..",this.state.data.follow[i].id);
 
             follower.push(
               <div key={i}>
@@ -201,7 +200,7 @@ class header extends Component {
                         value={a}/>
                       <Button
                         onClick={ (event) => {
-                          this.handlefollow(a);
+                          this.handleFollow(a);
                           event.preventDefault();
                         }}
                         type="submit"
@@ -232,104 +231,101 @@ class header extends Component {
     const profileroute = `/profile/${ this.props.params.id }`;
     const morefriendsroute = `/morefriends/${ this.props.params.id }`;
 
-      return (
-        <div className="site">
-          <Navbar brand='Twitter' right className="indigo">
-            <NavItem href={homeroute}>
-              <Icon>home</Icon>
-            </NavItem>
-            <Modal
-              header=''
-              trigger={
-                <NavItem>
-                  <Icon>mode_edit</Icon>
-                </NavItem>
-              }>
-              <form
-                onSubmit={ (event) => {
-                   this.onTweet();
-                   event.preventDefault();
-                 }}>
-                <Input
-                  name="tweet"
-                  placeholder="Whats going on???"
-                  maxLength="140"
-                  onChange={this.handleInputChange}
-                  required="required"/>
+    return (
+      <div className="site">
+        <Navbar brand='Twitter' right className="indigo">
+          <NavItem href={homeroute}>
+            <Icon>home</Icon>
+          </NavItem>
+          <Modal
+            header=''
+            trigger={
+              <NavItem>
+                <Icon>mode_edit</Icon>
+              </NavItem>
+            }>
+            <form
+              onSubmit={ (event) => {
+                 this.onTweet();
+                 event.preventDefault();
+               }}>
+              <Input
+                name="tweet"
+                placeholder="Whats going on???"
+                maxLength="140"
+                onChange={this.handleInputChange}
+                required="required"/>
 
-                <Input
-                  name="imageTweet"
-                  type="file"
-                  onChange={this.handleInputChange}
-                />
-                  <Button
-                    type="submit"
-                    className="indigo"
+              <Input
+                name="imageTweet"
+                type="file"
+                onChange={this.handleInputChange}
+              />
+                <Button
+                  type="submit"
+                  className="indigo"
 
-                    id="tweetbtn">Tweet
-                  </Button>
+                  id="tweetbtn">Tweet
+                </Button>
+            </form>
+          </Modal>
+          <NavItem href={profileroute}>
+              <Icon>face</Icon>
+          </NavItem>
+          <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
+        </Navbar>
+
+        <div className="container site-content">
+          <Row key={i}>
+            <Col s={3} key={i}>
+            <br/>
+            <h5 className="indigo-text"><Icon>perm_identity</Icon>My Profile</h5>
+              <Card className='small'
+                header={
+                  <CardTitle key={i}
+                    image={require(`../public/images/f99903e47077c0d6d40e5eee4c39151c`)}>
+                  </CardTitle>
+                }
+                actions={[<a href='#'>{name}</a>]}>
+              </Card>
+              <br/>
+              <Collection>
+                <CollectionItem href="#!">
+                  Tweets <Badge newIcon className="indigo">{this.state.data.count1}</Badge>
+                </CollectionItem>
+                <CollectionItem href="#!">
+                  Followers <Badge newIcon className="indigo">{this.state.data.count}</Badge>
+                </CollectionItem>
+                <CollectionItem href="#!">
+                  Likes <Badge newIcon className="indigo">4</Badge>
+                </CollectionItem>
+
+              </Collection>
+            </Col>
+
+            <Col s={12} m={6}>
+            <br/>
+            <h5 className="indigo-text"><Icon>mode_edit</Icon>Tweets</h5>
+              {tweet}
+            </Col>
+
+            <Col s={12} m={3}>
+            <br/>
+            <h5 className="indigo-text"><Icon>person_pin</Icon>Who to Follow</h5>
+              {follower}
+              <form action={morefriendsroute}>
+                <Button className="blue">More Friends</Button>
               </form>
-            </Modal>
-            <NavItem href={profileroute}>
-                <Icon>face</Icon>
-            </NavItem>
-            <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
-          </Navbar>
+            </Col>
+          </Row>
 
-          <div className="container site-content">
-            <Row key={i}>
-              <Col s={3} key={i}>
-              <br/>
-              <h5 className="indigo-text"><Icon>perm_identity</Icon>My Profile</h5>
-                <Card className='small'
-                  header={
-                    <CardTitle key={i}
-                      image={require(`../public/images/f99903e47077c0d6d40e5eee4c39151c`)}>
-                    </CardTitle>
-                  }
-                  actions={[<a href='#'>{name}</a>]}>
-                </Card>
-                <br/>
-                <Collection>
-                  <CollectionItem href="#!">
-                    Tweets <Badge newIcon className="indigo">{this.state.data.count1}</Badge>
-                  </CollectionItem>
-                  <CollectionItem href="#!">
-                    Followers <Badge newIcon className="indigo">{this.state.data.count}</Badge>
-                  </CollectionItem>
-                  <CollectionItem href="#!">
-                    Likes <Badge newIcon className="indigo">4</Badge>
-                  </CollectionItem>
-
-                </Collection>
-              </Col>
-
-              <Col s={12} m={6}>
-              <br/>
-              <h5 className="indigo-text"><Icon>mode_edit</Icon>Tweets</h5>
-                {tweet}
-              </Col>
-
-              <Col s={12} m={3}>
-              <br/>
-              <h5 className="indigo-text"><Icon>person_pin</Icon>Who to Follow</h5>
-                {follower}
-                <form action={morefriendsroute}>
-                  <Button className="blue">More Friends</Button>
-                </form>
-              </Col>
-            </Row>
-
-            <Pagination items={10} activePage={1} maxButtons={8} className="" onSelect={this.onChangePage}/>
-          </div>
-
-          <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
-          </Footer>
+          <Pagination items={10} activePage={1} maxButtons={8} className="" onSelect={this.onChangePage}/>
         </div>
-      );
-    // } else {
-    //   return (<p> Not found</p>);
-    // }
+
+        <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
+        </Footer>
+      </div>
+    );
   }
 }
 

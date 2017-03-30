@@ -177,7 +177,7 @@ class profile extends Component {
        for ( i = 0; i < this.state.data.follow.length ; i++) {
         if(this.state.data.follow) {
           let a = this.state.data.follow[i].f_followerid;
-            console.log("///",this.state.data.follow[i].f_followerid);
+          console.log("///",this.state.data.follow[i].f_followerid);
           follower.push(
             <div key={i}>
             <CardPanel className="grey lighten-4 black-text">

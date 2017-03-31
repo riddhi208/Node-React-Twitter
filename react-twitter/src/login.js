@@ -23,7 +23,7 @@ class login extends Component {
   handleSubmit(event){
 
     axios.post('http://localhost:8000/login', {
-      userdata: this.state,
+      user: this.state,
     })
   .then(function (response) {
     console.log("cccccc",response.data.id)
@@ -56,6 +56,7 @@ class login extends Component {
 
   render() {
     console.log("------------->>>>>",this.state);
+    let emailerr='', passworderr='';
     return (
       <div className="site">
         <Navbar brand='Twitter' right className="indigo">
@@ -88,6 +89,7 @@ class login extends Component {
                 onChange={this.handleInputChange}
                 id="password"
               />
+
             </Row>
             <Button
               className="waves-effect waves-light indigo btn btn-block"

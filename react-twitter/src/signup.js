@@ -28,6 +28,7 @@ class signup extends Component {
       {user: this.state,})
 
     .then(function (response) {
+
       console.log(response);
     })
     .catch(function (error) {
@@ -62,7 +63,6 @@ class signup extends Component {
               type="text"
               name="fullname"
               label="name"
-              error="name is required"
               validate='true'
               onChange={this.handleInputChange}
               minLength="3"
@@ -75,7 +75,6 @@ class signup extends Component {
             type="email"
             name="emailid"
             label="Email Id"
-            error="name is required"
             validate='true'
             onChange={this.handleInputChange}
             required
@@ -87,7 +86,6 @@ class signup extends Component {
             type="password"
             label="Password"
             name="password"
-            error="name is required"
             validate='true'
             onChange={this.handleInputChange}
             minLength="1"

@@ -101,7 +101,7 @@ class profile extends Component {
       })
 
     .then(function (response) {
-      cookie.remove('id', { path: '/' });
+      cookie.remove('this.props.params.id', { path: '/' });
       browserHistory.push('/login');
       console.log(response);
     })
@@ -268,7 +268,7 @@ class profile extends Component {
           <NavItem href={profileroute}>
               <Icon>face</Icon>
           </NavItem>
-          <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
+          <NavItem href={this.handleLogout}><Icon>input</Icon></NavItem>
         </Navbar>
 
         <div className="container site-content">

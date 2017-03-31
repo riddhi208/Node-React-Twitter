@@ -3,6 +3,7 @@ import '../public/css/App.css';
 import '../public/css/header.css';
 import { Navbar, NavItem, Icon, Modal, Button, Input, Col, Row, Footer } from 'react-materialize';
 import axios from 'axios';
+import cookie from 'react-cookie';
 import { browserHistory } from 'react-router';
 
 
@@ -17,6 +18,7 @@ class updateprofile extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
   handleSubmit(event) {
     alert('A Name was submitted: '+this.state.fullname +'\n');
@@ -64,6 +66,25 @@ class updateprofile extends Component {
     console.log("state---->", this.state);
   }
 
+  handleLogout(event) {
+    alert('A logout was submitted: '+this.state.fullname +'\n');
+    let userid = this.props.params.id;
+    axios.get('http://localhost:8000/logout',
+      {
+        user: this.state,
+      })
+
+    .then(function (response) {
+      cookie.remove('userid', { path: '/' });
+      browserHistory.push('/login');
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    event.preventDefault(event);
+  }
+
   render() {
     const a = this.state;
     console.log("????",a);
@@ -100,7 +121,7 @@ class updateprofile extends Component {
           <NavItem href={profileroute}>
               <Icon>face</Icon>
           </NavItem>
-          <NavItem href='/login' onSubmit={this.handleLogout}><Icon>input</Icon></NavItem>
+          <NavItem href={this.handleLogout}><Icon>input</Icon></NavItem>
         </Navbar>
         <div className="container signupform site-content">
         <form onSubmit={this.handleSubmit}>
@@ -151,7 +172,7 @@ class updateprofile extends Component {
             name="submit"
             type="submit"
             className="indigo"
-          >SignUp
+          >Submit
           </Button>
           <br/>
           <br />

@@ -6,33 +6,34 @@ const app = require('../app');
 
 var user = {
   user: {
-    id: 1,
+    id: 66,
     fullname: 'riddhi',
     emailid: 'riddhi@gmail.com',
     password: 'riddhi',
     image: 'twitter.jpg',
-  },
-  userdata:{
-    id: 1,
-    fullname: 'riddhi',
-    emailid: 'riddhi@gmail.com',
-    password: 'riddhi',
-    image: 'twitter.jpg',
-  },
-  data: {
-    t_tweetText: 'Hello world',
-    t_time: 'now()',
-    t_userid: '1',
-    t_likeCount: '',
-  },
-  username: {
-    id: 1,
   }
 };
 const follow = {
-  data: {
-  f_userid: '1',
+  data: user.user.id,
   f_followerid: '1',
+};
+
+const tweet = {
+  data: {
+    username: {
+      id: user.user.id,
+    }
+  },
+  t_userid: user.user.id,
+  username: user.user.id,
+};
+
+const updateprofile = {
+  data: {
+    fullname: 'riddhi',
+    password: 'riddhi',
+    emailid: 'riddhi@gmail.com',
+    image: '2567901bf9cbf2c5ede7317aba2379bc',
   },
 };
 
@@ -50,123 +51,24 @@ describe('index', function () {
     });
   });
 });
-describe('GET /register', function () {
-  it('should return registration page', function (done) {
-    request(app)
-      .get('/register')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /login', function () {
-  it('should return login page', function (done) {
-    request(app)
-      .get('/login')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /logout', function () {
-  it('should return login page', function (done) {
-    request(app)
-      .get('/logout')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /index', function () {
-  it('should return index page', function (done) {
-    request(app)
-      .get('/index')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /header', function () {
+
+// describe('GET /logout', function () {
+//   it('should return login page', function (done) {
+//     request(app)
+//       .get('/logout')
+//       .expect('Content-type', 'text/html; charset=utf-8')
+//       .expect(200)
+//       .end(function (err, res) {
+//         res.status.should.be.equal(200);
+//         done();
+//       });
+//   });
+// });
+
+describe(`GET /header/${user.user.id}`,  ()=> {
   it('should return header', function (done) {
     request(app)
-      .get('/header')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /profile', function () {
-  it('should return profile page', function (done) {
-    request(app)
-      .get('/profile')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /updateprofile', function () {
-  it('should return update profile page', function (done) {
-    request(app)
-      .get('/updateprofile')
-      .expect('Content-type', 'text/html; charset=utf-8')
-      .expect(200)
-      .end(function (err, res) {
-        res.status.should.be.equal(200);
-        done();
-      });
-  });
-});
-describe('GET /deleteaccount', function () {
-  it('it should response login page', function (done) {
-    this.timeout(500);
-    setTimeout(done, 300);
-    request(app)
-    .get('/deleteaccount')
-    .expect(304)
-    .end(function (err, res) {
-      if (err) {
-        done(err);
-      } else {
-        res.status.should.be.equal(304);
-        done();
-      }
-    });
-  });
-});
-describe('GET /resetpassword', function () {
-  it('should return get password page', function (done) {
-    request(app)
-    .get('/resetpassword')
-    .expect('Content-type', 'text/html; charset=utf-8')
-    .expect(200)
-    .end(function (err, res) {
-      res.status.should.be.equal(200);
-      done();
-    });
-  });
-});
-describe('GET /profilepictureupload', function () {
-  it('it should response updateprofile page', function (done) {
-    request(app)
-      .get('/updateprofile')
+      .get(`/header/${user.user.id}`)
       .expect(200)
       .end(function (err, res) {
         if (err) {
@@ -176,6 +78,41 @@ describe('GET /profilepictureupload', function () {
           done();
         }
       });
+  });
+});
+
+
+describe(`GET /profile/${user.user.id}`, function () {
+  it('should return profile page', function (done) {
+    request(app)
+      .get(`/profile/${user.user.id}`)
+      .expect(200)
+      .end(function (err, res) {
+        if (err) {
+          done(err);
+        } else {
+          res.status.should.be.equal(200);
+          done();
+        }
+      });
+  });
+});
+
+describe(`GET /deleteaccount/${user.user.id}`, function () {
+  it('it should response login page', function (done) {
+    this.timeout(500);
+    setTimeout(done, 300);
+    request(app)
+    .get(`/deleteaccount/${user.user.id}`)
+    .expect(200)
+    .end(function (err, res) {
+      if (err) {
+        done(err);
+      } else {
+        res.status.should.be.equal(200);
+        done();
+      }
+    });
   });
 });
 
@@ -195,6 +132,7 @@ describe('POST /register', function () {
       });
   });
 });
+
 describe('POST /login', function () {
   it('it should response header page', function (done) {
     request(app)
@@ -215,57 +153,51 @@ describe('POST /tweet', function () {
   it('it should response header page', function (done) {
     request(app)
       .post('/tweet')
-      .send(user)
-      .expect(302)
+      .send(tweet)
+      .expect(200)
       .end(function (err, res) {
         if (err) {
           done(err);
         } else {
-          res.status.should.be.equal(302);
+          res.status.should.be.equal(200);
           done();
         }
       });
   });
 });
-describe('POST /profile', function () {
-  it('it should response profile page', function (done) {
-    const user = {
-      t_tweetText: 'Hello world',
-      t_time: 'now()',
-      t_userid: '1',
-      t_likeCount: '',
-    };
-    request(app)
-      .post('/profile')
-      .send(user)
-      .expect(302)
-      .end(function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          res.status.should.be.equal(302);
-          done();
-        }
-      });
-  });
-});
-
 describe('POST /follow', function () {
-  it('it should response header page', function (done) {
+  it('it should response login page', function (done) {
+    this.timeout(500);
+    setTimeout(done, 300);
     request(app)
-      .post('/follow')
-      .send(follow)
-      .expect(302)
-      .end(function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          res.status.should.be.equal(302);
-          done();
-        }
-      });
+    .post('/follow')
+    .expect(302)
+    .end(function (err, res) {
+      if (err) {
+        done(err);
+      } else {
+        res.status.should.be.equal(200);
+        done();
+      }
+    });
   });
 });
+// describe('POST /follow', function () {
+//   it('it should response header page', function (done) {
+//     request(app)
+//       .post('/follow')
+//       .send(follow)
+//       .expect(302)
+//       .end(function (err, res) {
+//         if (err) {
+//           done(err);
+//         } else {
+//           res.status.should.be.equal(200);
+//           done();
+//         }
+//       });
+//   });
+// });
 
 describe('POST /unfollow', function () {
   it('it should response login page', function (done) {
@@ -278,43 +210,18 @@ describe('POST /unfollow', function () {
       if (err) {
         done(err);
       } else {
-        res.status.should.be.equal(302);
+        res.status.should.be.equal(200);
         done();
       }
     });
   });
 });
 
-describe('POST /updateprofile', function () {
+describe(`POST /updateprofile/${user.user.id}`, function () {
   it('it should response updtaeprofile page', function (done) {
-    const user = {
-      fullname: 'vivek',
-      emailid: 'vivek@vivek.com',
-      password: 'vivek',
-    };
     request(app)
-      .post('/updateprofile')
-      .send(user)
-      .expect(302)
-      .end(function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          res.status.should.be.equal(302);
-          done();
-        }
-      });
-  });
-});
-
-describe('POST /profilepictureupload', function () {
-  it('it should response update profile page', function (done) {
-    const user = {
-      image: 'twitter.jpg',
-    };
-    request(app)
-      .post('/profilepictureupload')
-      .send(user)
+      .post(`/updateprofile/${user.user.id}`)
+      .send(updateprofile)
       .expect(200)
       .end(function (err, res) {
         if (err) {
@@ -327,24 +234,21 @@ describe('POST /profilepictureupload', function () {
   });
 });
 
-describe('POST /resetpassword', function () {
-  it('it should response updateprofile page', function (done) {
-    const user = {
-      emailid: 'vivek@improwised.com',
-      securityquestion: 'bof',
-      securityanswer: 'jamnagar',
-    };
-    request(app)
-      .post('/resetpassword')
-      .send(user)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) {
-          done(err);
-        } else {
-          res.status.should.be.equal(200);
-          done();
-        }
-      });
-  });
-});
+// describe(`POST /editprofile/ + ${registeruser.userdata.id}`, () => {
+//     it('user can edit their profile', (done) => {
+//       request(app)
+//         .post(`/editprofile/ + ${registeruser.userdata.id}`)
+//         .send(editprofile)
+//         .expect(200)
+//         .end((err, res) => {
+//           if (err) {
+//             done(err);
+//           } else {
+//             res.status.should.be.equal(200);
+//             done();
+//           }
+//         });
+//     });
+//   });
+
+

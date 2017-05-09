@@ -25,6 +25,11 @@ footer.page-footer {
 .pagination li a {
     color:indigo;
 }
+
+h4{
+  font-color:indigo;
+
+}
 @media screen and (max-width: 500px){
   body {
     color:red;

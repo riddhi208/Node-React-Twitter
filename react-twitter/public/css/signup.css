@@ -1,8 +1,16 @@
 .signupform{
   border: 1px solid #cfd8dc;
   padding: 2%;
-  width: 40%;
-  margin:auto auto;
+  width: 30%;
+  margin: auto auto;
+  margin-bottom: -20%;
+}
+
+.updateform{
+  border: 1px solid #cfd8dc;
+  padding: 2%;
+  width: 30%;
+  height: 40%;
 }
 @media screen and (max-width: 500px){
   form.signupform{

@@ -5,18 +5,44 @@ import cookie from 'react-cookie';
 import axios from 'axios';
 import '../public/css/App.css';
 import '../public/css/header.css';
+import {Dropzone} from 'react-dropzone';
 
 class header extends Component {
   constructor(props){
     super(props);
     this.state={
       data:'',
+      files: [],
+      imagePriviewUrl: '',
     };
+    this._handleImageChange = this.handleImageChange.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
+
     this.onTweet = this.onTweet.bind(this);
     this.handleFollow = this.handleFollow.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.onChangePage = this.onChangePage.bind(this);
+  }
+
+  _handleSubmit(event) {
+    event.preventDefault();
+  }
+
+  handleImageChange(event) {
+    event.preventDefault();
+
+    let reader = new FileReader();
+    let file = event.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file)
   }
 
   handleMount(){
@@ -43,6 +69,15 @@ class header extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
+    console.log("state---->", this.state);
+  }
+
+  handleFileUpload({file}) {
+    // const file = tweetimage[0];
+    // this.props.actions.uploadRequest({
+    //   file,
+    //   name: 'Awesome Cat Pic'
+    // })
     console.log("state---->", this.state);
   }
 
@@ -111,11 +146,20 @@ class header extends Component {
 
   }
 
+
+
   onChangePage(event) {
     alert("page changed...");
   }
 
+
   render() {
+    let {imagePreviewUrl} = this.state;
+    let $imagePreview = null;
+    if (imagePreviewUrl) {
+      $imagePreview = (<img src={imagePreviewUrl} />);
+    }
+
     console.log("------------->>>>>",this.state);
     var tweet = [];
     if(this.state.data.tweets) {
@@ -158,15 +202,16 @@ class header extends Component {
                   width="50px"
                   className=""/>
                 </Col>
-                <Col s={3}>
+                <Col s={5}>
                 <a href="#" className="tweetName"> {this.state.data.tweets[i].fullname}</a>
+                </Col>
+                <Col s={4}>
+                <div className="time indigo-text">{this.state.data.tweets[i].t_time}</div>
                 </Col>
               </Row>
               <div className="tweetText"> {this.state.data.tweets[i].t_tweetText}
               </div>
               <br />
-              <div className="time indigo-text">{this.state.data.tweets[i].t_time}</div>
-              <br/>
             </CardPanel>
             </div>
           );
@@ -230,7 +275,7 @@ class header extends Component {
     const updateroute = `/updateprofile/${ this.props.params.id }`;
     const profileroute = `/profile/${ this.props.params.id }`;
     const morefriendsroute = `/morefriends/${ this.props.params.id }`;
-
+    let dropzoneRef;
     return (
       <div className="site">
         <Navbar brand='Twitter' right className="indigo">
@@ -238,7 +283,7 @@ class header extends Component {
             <Icon>home</Icon>
           </NavItem>
           <Modal
-            header=''
+            header='Express Your mood...'
             trigger={
               <NavItem>
                 <Icon>mode_edit</Icon>
@@ -249,24 +294,31 @@ class header extends Component {
                  this.onTweet();
                  event.preventDefault();
                }}>
+              <br/>
               <Input
                 name="tweet"
                 placeholder="Whats going on???"
                 maxLength="140"
                 onChange={this.handleInputChange}
-                required="required"/>
+                />
 
-              <Input
-                name="imageTweet"
-                type="file"
-                onChange={this.handleInputChange}
-              />
-                <Button
-                  type="submit"
-                  className="indigo"
 
-                  id="tweetbtn">Tweet
-                </Button>
+              <div>
+
+
+                  <input type="file" name="file" onChange={this._handleImageChange} />
+
+
+                {$imagePreview}
+                </div>
+
+              <br/>
+              <Button
+                type="submit"
+                // className="indigo"
+                className="modal-action modal-close indigo"
+                id="tweetbtn">Tweet
+              </Button>
             </form>
           </Modal>
           <NavItem href={profileroute}>
@@ -274,6 +326,8 @@ class header extends Component {
           </NavItem>
           <NavItem href={this.handleLogout}><Icon>input</Icon></NavItem>
         </Navbar>
+
+
 
         <div className="container site-content">
           <Row key={i}>

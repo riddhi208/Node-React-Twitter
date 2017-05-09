@@ -75,7 +75,7 @@ class updateprofile extends Component {
       })
 
     .then(function (response) {
-      cookie.remove('userid', { path: '/' });
+      cookie.remove('this.props.params.id', { path: '/' });
       browserHistory.push('/login');
       console.log(response);
     })
@@ -96,34 +96,47 @@ class updateprofile extends Component {
           <NavItem href={homeroute}>
             <Icon>home</Icon>
           </NavItem>
-            <Modal
-              header=''
-              trigger={
-                <NavItem>
-                  <Icon>mode_edit</Icon>
-                </NavItem>
-              }>
+          <Modal
+            header='Express Your mood...'
+            trigger={
+              <NavItem>
+                <Icon>mode_edit</Icon>
+              </NavItem>
+            }>
+            <form
+              onSubmit={ (event) => {
+                 this.onTweet();
+                 event.preventDefault();
+               }}>
+              <br/>
               <Input
                 name="tweet"
                 placeholder="Whats going on???"
                 maxLength="140"
-                required="required"/>
-              <form
-                onSubmit={this.onTweet}
-                encType="multipart/form-data">
-                <Button
-                  type="submit"
-                  className="indigo"
-                  id="tweetbtn">Tweet
-                </Button>
-              </form>
-            </Modal>
+                onChange={this.handleInputChange}
+                />
+
+              <Button
+                name="imageTweet"
+                type="file"
+
+              >Upload</Button>
+              <br/>
+              <Button
+                type="submit"
+                // className="indigo"
+                className="modal-action modal-close indigo"
+                id="tweetbtn">Tweet
+              </Button>
+            </form>
+          </Modal>
           <NavItem href={profileroute}>
               <Icon>face</Icon>
           </NavItem>
           <NavItem href={this.handleLogout}><Icon>input</Icon></NavItem>
         </Navbar>
-        <div className="container signupform site-content">
+
+        <div className="container updateform site-content">
         <form onSubmit={this.handleSubmit}>
           <br />
           <h4 className="indigo-text text-darken-2">Update Profile</h4>

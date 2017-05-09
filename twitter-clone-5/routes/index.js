@@ -11,6 +11,8 @@ const upload = multer({ dest: path.resolve(__dirname, '../public/images/profile/
 
 const uploadtweet = multer({ dest: path.resolve(__dirname, '../public/images/tweetimage/') });
 
+let multiparty = require('multiparty');
+let fs = require('fs');
 
 router.get('/', (req, res, next) => {
 
@@ -112,7 +114,7 @@ router.get('/header/:id', (req, res, next) => {
       .select()
       .field('fullname')
       .field('t_tweetText')
-      .field('image')
+      .field('t_image')
       .field('t_likeCount')
       .field('t.*')
       .from('tbl_register', 'r')
@@ -212,29 +214,77 @@ router.post('/tweet', (req, res, next) => {
   console.log("aaaaaaa", userid);
   const tweetText = req.body.data.tweet;
   console.log("/////////////", tweetText);
-  // if (req.file) {
-  //   filename = req.file.filename;
+
+  const form = new multiparty.Form();
+  let filename = '';
+  // if (req.files) {
+  //   filename = req.files.filename;
   // } else {
   //   filename = '';
   // }
-  const query = DB.builder()
-    .insert()
-    .into('tbl_tweet')
-    .set('t_tweetText', req.body.data.tweet)
-    .set('t_time', 'now()')
-    // .set('t_image', filename)
-    .set('t_userid', userid)
-    .toParam();
-  DB.executeQuery(query, (error) => {
-    if (error) {
-      next(error);
-    }
-    let data = {
-      id: userid,
-    }
-    res.status(200).send(data);
-  });
+
+
+  form.parse(req, (err1, fields, files) => {
+   let { path: tempPath, originalFilename } = files.imageFile[0];
+   // console.log(originalFilename)
+   const newPath = '../public/images/tweetimage/' + originalFilename;
+   // console.log(newPath);
+   // return false;
+   // const copyToPath = `"/Users/parita/Twittwe-clone/public/images" ${originalFilename}`;
+   fs.readFile(tempPath, (err2, data) => {
+     fs.writeFile(newPath, data, () => {
+       fs.unlink(tempPath, () => {
+         res.send(`File uploaded to: ${newPath}`);
+
+         if (req) {
+           photo = originalFilename;
+         } else {
+           photo = '';
+         }
+        console.log('555555',filename);
+        const query = DB.builder()
+          .insert()
+          .into('tbl_tweet')
+          .set('t_tweetText', req.body.data.tweet)
+          .set('t_time', 'now()')
+          .set('t_image', filename)
+          .set('t_userid', userid)
+          .toParam();
+        DB.executeQuery(query, (error) => {
+          if (error) {
+            next(error);
+          }
+          let data = {
+            id: userid,
+          }
+          res.status(200).send(data);
+        });
+      });
+     });
+   });
+ });
 });
+
+
+//   console.log('555555',filename);
+//   const query = DB.builder()
+//     .insert()
+//     .into('tbl_tweet')
+//     .set('t_tweetText', req.body.data.tweet)
+//     .set('t_time', 'now()')
+//     .set('t_image', filename)
+//     .set('t_userid', userid)
+//     .toParam();
+//   DB.executeQuery(query, (error) => {
+//     if (error) {
+//       next(error);
+//     }
+//     let data = {
+//       id: userid,
+//     }
+//     res.status(200).send(data);
+//   });
+// });
 
 
 router.get('/profile/:id', (req, res, next) => {

@@ -107,6 +107,8 @@ class signup extends Component {
           >SignUp
           </Button>
           <br/>
+          <br/>
+          <br/>
         </form>
       </div>
       <Footer copyrights="&copy; 2015 Developed By Riddhi Gohel" className="indigo">
